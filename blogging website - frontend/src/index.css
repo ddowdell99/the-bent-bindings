@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Gelasio&family=Inter:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Italiana&display=swap');
 @import "@flaticon/flaticon-uicons/css/all/all";
 
 @tailwind base;
@@ -6,6 +7,10 @@
 @tailwind utilities;
 
 @layer components {
+    .font-italiana {
+        font-family: 'Italiana', sans-serif;
+
+    }
     * {
         @apply m-0 p-0 box-border text-base outline-purple/30 duration-100;
     }
@@ -15,7 +20,7 @@
     }
 
     body {
-        @apply font-inter font-normal text-black;
+        @apply font-italiana font-normal text-black;
     }
 
     i {
@@ -35,7 +40,7 @@
     }
 
     .navbar{
-        @apply z-10 sticky top-0 flex items-center gap-12 w-full px-[5vw] py-5 h-[80px] border-b border-grey bg-white;
+        @apply z-10 sticky top-0 flex items-center gap-12 w-full pl-[2vw] pr-[5vw] py-5 h-[80px] border-b border-grey bg-white;
     }
 
     .h-cover{
