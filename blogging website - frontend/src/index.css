@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Gelasio&family=Inter:wght@400;500&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Italiana&display=swap');
-@import "@flaticon/flaticon-uicons/css/all/all";
+@import '@flaticon/flaticon-uicons/css/all/all';
 
 @tailwind base;
 @tailwind components;
@@ -41,7 +41,7 @@
     }
 
     .navbar {
-        @apply z-10 sticky top-0 flex items-center gap-12 w-full pl-[2vw] md:pl-[2vw] lg:pl-[10vw] pr-[5vw] py-5 h-[80px] lg:h-[125px] border-b border-black bg-white;
+        @apply z-10 sticky top-0 flex items-center gap-12 w-full pl-[2vw] md:pl-[2vw] lg:pl-[10vw] pr-[5vw] py-5 sm:h-[80px] md:h-[125px] border-b border-black bg-white;
     }
 
     .h-cover {
@@ -53,7 +53,7 @@
     }
 
     .btn-dark {
-        @apply whitespace-nowrap bg-black text-white rounded-full py-3 px-6 text-xl capitalize hover:bg-opacity-80;
+        @apply whitespace-nowrap bg-black text-white py-3 px-6 text-xl capitalize hover:bg-opacity-80;
     }
 
     .btn-light {
