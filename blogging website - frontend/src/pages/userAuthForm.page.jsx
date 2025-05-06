@@ -6,7 +6,7 @@ import AnimationWrapper from "../common/page-animation";
 
 const UserAuthForm = ({ type }) => {
   return (
-    <AnimationWrapper keyValue={ type }>
+    <AnimationWrapper keyValue={type}>
       <section className="h-cover flex items-center justify-center">
         <form className="w-[80%] max-w-[400px]">
           <h1 className="text-4xl capitalize text-center mb-24">
