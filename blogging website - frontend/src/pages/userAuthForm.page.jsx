@@ -14,9 +14,9 @@ const UserAuthForm = ({ type }) => {
           </h1>
           {type != "sign-in" ? (
             <InputBox
-              name="fullname"
+              name="username"
               type="text"
-              placeholder="Full Name"
+              placeholder="Username"
               icon="fi-rr-circle-user"
             />
           ) : (

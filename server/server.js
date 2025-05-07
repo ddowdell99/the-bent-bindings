@@ -1,6 +1,10 @@
 import express from "express";
 import mongoose from "mongoose";
 import "dotenv/config";
+import bcrypt from "bcrypt";
+
+// Schema Below:
+import User from "../server/Schema/User.js";
 
 const server = express();
 let PORT = 3000;
@@ -15,14 +19,14 @@ mongoose.connect(process.env.DB_LOCATION, {
   autoIndex: true,
 });
 
-server.post("/signup", (req, res) => {
-  let { fullname, email, password } = req.body;
+server.post("/signup", async (req, res) => {
+  let { username, email, password } = req.body;
 
   // validating data from frontend
-  if (fullname.length < 3) {
+  if (username.length < 3) {
     return res
       .status(403)
-      .json({ error: "Full Name must be at least 3 letters long" });
+      .json({ error: "Username must be at least 3 letters long" });
   }
 
   if (!email.length) {
@@ -40,7 +44,31 @@ server.post("/signup", (req, res) => {
     });
   }
 
-  return res.status(200).json({ status: "ok" });
+  try {
+    const usernameExists = await User.exists({
+      "personal_info.username": username,
+    });
+    if (usernameExists) {
+      return res.status(400).json({ error: "Username already exists." });
+    }
+    const emailExists = await User.exists({ "personal_info.email": email });
+    if (emailExists) {
+      return res.status(400).json({ error: "Email already exists." });
+    }
+    const hashed_password = await bcrypt.hash(password, 10);
+
+    const user = new User({
+      personal_info: { username, email, password: hashed_password },
+    });
+
+    const savedUser = await user.save();
+    return res.status(200).json({ user: savedUser });
+  } catch (err) {
+    console.error(err);
+    return res
+      .status(500)
+      .json({ error: "Server error. Please try again later." });
+  }
 });
 
 server.listen(PORT, () => {
