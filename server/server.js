@@ -2,6 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 import "dotenv/config";
 import bcrypt from "bcrypt";
+import jwt from 'jsonwebtoken'
 
 // Schema Below:
 import User from "../server/Schema/User.js";
@@ -18,6 +19,18 @@ server.use(express.json());
 mongoose.connect(process.env.DB_LOCATION, {
   autoIndex: true,
 });
+
+const formatDatatoSend = (user) => {
+
+  const access_token = jwt.sign({ id: user._id }, process.env.SECRET_ACCESS_KEY)
+
+  return {
+    access_token,
+    profile_img: user.personal_info.profile_img,
+    username: user.personal_info.username
+
+  }
+}
 
 server.post("/signup", async (req, res) => {
   let { username, email, password } = req.body;
@@ -62,7 +75,7 @@ server.post("/signup", async (req, res) => {
     });
 
     const savedUser = await user.save();
-    return res.status(200).json({ user: savedUser });
+    return res.status(200).json(formatDatatoSend(savedUser));
   } catch (err) {
     console.error(err);
     return res
