@@ -1,14 +1,72 @@
-import React from "react";
+import React, { useRef } from "react";
 import InputBox from "../components/input.component";
 import googleIcon from "../imgs/google.png";
 import { Link } from "react-router-dom";
 import AnimationWrapper from "../common/page-animation";
+import { Toaster, toast } from "react-hot-toast";
+import axios from "axios";
 
 const UserAuthForm = ({ type }) => {
+  const authForm = useRef();
+
+  const userAuthThroughServer = (serverRoute, formData) => {
+    axios
+      .post(import.meta.env.VITE_SERVER_DOMAIN + serverRoute, formData)
+      .then(({ data }) => {
+        console.log(data);
+      })
+      .catch(({ response }) => {
+        toast.error(response.data.error);
+      });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    let serverRoute = type == "sign-in" ? "/signin" : "/signup";
+
+    let emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/; // regex for email
+    let passwordRegex =
+      /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,}$/; // regex for password
+
+    let form = new FormData(authForm.current);
+
+    let formData = {};
+
+    for (let [key, value] of form.entries()) {
+      formData[key] = value
+    }
+
+    let {username, email, password} = formData;
+
+    // form validation
+    if (username) {
+      if (username.length < 3) {
+        return toast.error("Username must be at least 3 letters long");
+      }
+    }
+
+    if (!email.length) {
+      return toast.error("Please provide an email.");
+    }
+
+    if (!emailRegex.test(email)) {
+      return toast.error("Email is invalid");
+    }
+
+    if (!passwordRegex.test(password)) {
+      return toast.error(
+        "Password must be greater than 8 characters with 1 number, 1 lowercase, 1 uppercase letter and 1 special character!"
+      );
+    }
+    userAuthThroughServer(serverRoute, formData);
+  };
+
   return (
     <AnimationWrapper keyValue={type}>
       <section className="h-cover flex items-center justify-center">
-        <form className="w-[80%] max-w-[400px]">
+        <Toaster />
+        <form ref={authForm} className="w-[80%] max-w-[400px]">
           <h1 className="text-4xl capitalize text-center mb-24">
             {type == "sign-in" ? "Welcome Back!" : "Join us today!"}
           </h1>
@@ -34,7 +92,11 @@ const UserAuthForm = ({ type }) => {
             placeholder="Password"
             icon="fi-rr-lock"
           />
-          <button className="btn-dark center mt-" type="submit">
+          <button
+            className="btn-dark center mt-"
+            type="submit"
+            onClick={handleSubmit}
+          >
             {type.replace("-", " ")}
           </button>
           <div className="relative w-full flex items-center gap-2 my-10 opacity-10 uppercase text-black font-bold">

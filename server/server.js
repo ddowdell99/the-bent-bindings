@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import "dotenv/config";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import cors from "cors";
 
 // Schema Below:
 import User from "../server/Schema/User.js";
@@ -15,6 +16,7 @@ let passwordRegex =
   /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,}$/; // regex for password
 
 server.use(express.json());
+server.use(cors());
 
 mongoose.connect(process.env.DB_LOCATION, {
   autoIndex: true,
