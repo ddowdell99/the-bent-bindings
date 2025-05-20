@@ -5,15 +5,15 @@ import { Link } from "react-router-dom";
 import AnimationWrapper from "../common/page-animation";
 import { Toaster, toast } from "react-hot-toast";
 import axios from "axios";
+import { storeInSession } from "../common/session";
 
 const UserAuthForm = ({ type }) => {
-  const authForm = useRef();
-
   const userAuthThroughServer = (serverRoute, formData) => {
     axios
       .post(import.meta.env.VITE_SERVER_DOMAIN + serverRoute, formData)
       .then(({ data }) => {
-        console.log(data);
+        storeInSession("user", JSON.stringify(data));
+        console.log(sessionStorage);
       })
       .catch(({ response }) => {
         toast.error(response.data.error);
@@ -29,15 +29,15 @@ const UserAuthForm = ({ type }) => {
     let passwordRegex =
       /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,}$/; // regex for password
 
-    let form = new FormData(authForm.current);
+    let form = new FormData(formElement);
 
     let formData = {};
 
     for (let [key, value] of form.entries()) {
-      formData[key] = value
+      formData[key] = value;
     }
 
-    let {username, email, password} = formData;
+    let { username, email, password } = formData;
 
     // form validation
     if (username) {
@@ -66,7 +66,7 @@ const UserAuthForm = ({ type }) => {
     <AnimationWrapper keyValue={type}>
       <section className="h-cover flex items-center justify-center">
         <Toaster />
-        <form ref={authForm} className="w-[80%] max-w-[400px]">
+        <form id="formElement" className="w-[80%] max-w-[400px]">
           <h1 className="text-4xl capitalize text-center mb-24">
             {type == "sign-in" ? "Welcome Back!" : "Join us today!"}
           </h1>
